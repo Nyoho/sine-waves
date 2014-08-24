@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="audioApp">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sine Waves</title>
+    <script src="js/angular.min.js"></script>
+    <script src="js/script.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div ng-controller="mainCtrl" ng-init="hoge='AngularJS'">
+        <h1>2つの音を同時ならす</h1>
+        <p>異なる振動数の2つの正弦波を同時に再生して聴いてみましょう。</p>
+
+        <form novalidate name="myForm" ng-submit="changeFreq()">
+          f1 = <input type="number" name="f1" ng-model="f1" min="1" required> Hz
+          <span ng-show="myForm.f1.$error.required" class="error">必ず入力して下さい。</span>
+          <span ng-show="myForm.f1.$error.number" class="error">数値を入力して下さい。</span>
+          <br>
+          f2 = <input type="number" name="f2" ng-model="f2" min="1" required> Hz
+          <span ng-show="myForm.f2.$error.required" class="error">必ず入力して下さい。</span>
+          <span ng-show="myForm.f2.$error.number" class="error">数値を入力して下さい。</span>
+        </form>
+
+        <div>
+        <p>sin (2π・{{ f1 }}・t)</p>
+        <p>sin (2π・{{ f2 }}・t)</p>
+        </div>
+
+        <button ng-click="togglePlay()" class="btn btn-primary btn-lg">
+          <span ng-switch on="playing">
+            <span ng-switch-default>Stop</span>
+            <span ng-switch-when="false">Play</span>
+          </span>            
+        </button>
+
+      </div>
+    </div>
+  </body>
+</html>
