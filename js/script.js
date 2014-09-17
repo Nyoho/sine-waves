@@ -5,6 +5,7 @@ angular.module('audioApp', [])
 
     var buffer_size = 2048;
     var context = new AudioContext();
+    var bufSrc = context.createBufferSource();
     var sampleRate = context.sampleRate;
     var jsNode = context.createJavaScriptNode(buffer_size , 0, 2);
 
@@ -13,6 +14,8 @@ angular.module('audioApp', [])
     var f1z = $scope.f1;
     var f2z = $scope.f2;
     var vol = 0.0;
+    var phase1 = 0.0;
+    var phase2 = 0.0;
     $scope.playing = false;
 
     function initAudio() {
@@ -24,7 +27,7 @@ angular.module('audioApp', [])
         var outR = e.outputBuffer.getChannelData(1);
         var sample = new Float32Array(buffer_size);
         for (var i = 0 ; i < buffer_size ; i++){
-          sample[i] = vol* (Math.sin(2 * Math.PI * $scope.f1 * t) + Math.sin(2 * Math.PI * $scope.f2 * t));
+          sample[i] = vol* (Math.sin(phase1) + Math.sin(phase2));
           doStep();
         }
         outL.set(sample);
@@ -32,9 +35,12 @@ angular.module('audioApp', [])
       };
 
       var doStep = function () {
-        t += 1.0/sampleRate;
-        f1z = 0.001*$scope.f1 + 0.999*f1z;
-        f2z = 0.001*$scope.f2 + 0.999*f2z;
+        if ($scope.f1 > 0 && $scope.f2 > 0) {
+          f1z = 0.001*$scope.f1 + 0.999*f1z;
+          f2z = 0.001*$scope.f2 + 0.999*f2z;
+        }
+        phase1 += 2 * Math.PI * f1z / sampleRate;
+        phase2 += 2 * Math.PI * f2z / sampleRate;
       };
 
       var bufSrc = context.createBufferSource();
