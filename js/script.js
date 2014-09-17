@@ -43,12 +43,6 @@ angular.module('audioApp', [])
         phase2 += 2 * Math.PI * f2z / sampleRate;
       };
 
-      var bufSrc = context.createBufferSource();
-
-      bufSrc.noteOn(0);
-      bufSrc.connect(jsNode);
-
-      jsNode.connect(context.destination);
     }
 
     initAudio();
@@ -57,9 +51,14 @@ angular.module('audioApp', [])
       if (vol > 0) {
         vol = 0;
         $scope.playing = false;
+        bufSrc.disconnect();
+        jsNode.disconnect();
       } else {
         vol = 0.5;
         $scope.playing = true;
+        bufSrc.noteOn(0);
+        bufSrc.connect(jsNode);
+        jsNode.connect(context.destination);
       }
       $scope.$apply();
     }
