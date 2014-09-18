@@ -7,7 +7,7 @@ angular.module('audioApp', [])
     var context = new AudioContext();
     var bufSrc = context.createBufferSource();
     var sampleRate = context.sampleRate;
-    var jsNode = context.createJavaScriptNode(buffer_size , 0, 2);
+    var jsNode = context.createScriptProcessor(buffer_size, 0, 2);
 
     $scope.f1 = 440;
     $scope.f2 = 440;
@@ -48,7 +48,7 @@ angular.module('audioApp', [])
     initAudio();
 
     $scope.togglePlay = function() {
-      if (vol > 0) {
+      if ($scope.playing) {
         vol = 0;
         $scope.playing = false;
         // bufSrc.disconnect();
@@ -56,9 +56,9 @@ angular.module('audioApp', [])
       } else {
         vol = 0.5;
         $scope.playing = true;
-        bufSrc.noteOn(0);
-        bufSrc.connect(jsNode);
         jsNode.connect(context.destination);
+        bufSrc.connect(jsNode);
+        bufSrc.start(0);
       }
       $scope.$apply();
     }
